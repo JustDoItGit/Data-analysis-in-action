@@ -6,8 +6,8 @@ from sklearn.preprocessing import StandardScaler
 
 # 数据加载，避免中文乱码问题
 data_ori = pd.read_csv('./heros.csv', encoding='GBK')
-features = [u'最大生命', u'生命成长', u'初始生命', u'最大法力', u'法力成长', u'初始法力', u'最高物攻', u'物攻成长', u'初始物攻', u'最大物防', u'物防成长', u'初始物防',
-            u'最大每5秒回血', u'每5秒回血成长', u'初始每5秒回血', u'最大每5秒回蓝', u'每5秒回蓝成长', u'初始每5秒回蓝', u'最大攻速', u'攻击范围']
+features = ['最大生命', '生命成长', '初始生命', '最大法力', '法力成长', '初始法力', '最高物攻', '物攻成长', '初始物攻', '最大物防', '物防成长', '初始物防',
+            '最大每5秒回血', '每5秒回血成长', '初始每5秒回血', '最大每5秒回蓝', '每5秒回蓝成长', '初始每5秒回蓝', '最大攻速', '攻击范围']
 data = data_ori[features]
 
 # 对英雄属性之间的关系进行可视化分析
@@ -22,11 +22,11 @@ sns.heatmap(corr, annot=True)
 plt.show()
 
 # 相关性大的属性保留一个，因此可以对属性进行降维
-features_remain = [u'最大生命', u'初始生命', u'最大法力', u'最高物攻', u'初始物攻', u'最大物防', u'初始物防', u'最大每5秒回血', u'最大每5秒回蓝', u'初始每5秒回蓝',
-                   u'最大攻速', u'攻击范围']
+features_remain = ['最大生命', '初始生命', '最大法力', '最高物攻', '初始物攻', '最大物防', '初始物防', '最大每5秒回血', '最大每5秒回蓝', '初始每5秒回蓝',
+                   '最大攻速', '攻击范围']
 data = data_ori[features_remain]
-data[u'最大攻速'] = data[u'最大攻速'].apply(lambda x: float(x.strip('%')) / 100)
-data[u'攻击范围'] = data[u'攻击范围'].map({'远程': 1, '近战': 0})
+data['最大攻速'] = data['最大攻速'].apply(lambda x: float(x.strip('%')) / 100)
+data['攻击范围'] = data['攻击范围'].map({'远程': 1, '近战': 0})
 # 采用 Z-Score 规范化数据，保证每个特征维度的数据均值为 0，方差为 1
 ss = StandardScaler()
 data = ss.fit_transform(data)
