@@ -3,6 +3,7 @@ import itertools
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.svm import LinearSVC
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_recall_curve
@@ -47,7 +48,7 @@ def show_metrics(cm):
 
 
 # 绘制精确率-召回率曲线
-def plot_precision_recall(precision, recall):
+def plot_precision_recall(precision, recall, algorithm_type='线性回归'):
     plt.step(recall, precision, color='b', alpha=0.2, where='post')
     plt.fill_between(recall, precision, step='post', alpha=0.2, color='b')
     plt.plot(recall, precision, linewidth=2)
@@ -55,7 +56,7 @@ def plot_precision_recall(precision, recall):
     plt.ylim([0.0, 1.05])
     plt.xlabel('召回率')
     plt.ylabel('精确率')
-    plt.title('精确率-召回率 曲线')
+    plt.title(f'{algorithm_type}精确率-召回率 曲线')
     plt.show()
 
 
@@ -110,3 +111,21 @@ show_metrics(cm)
 # 计算精确率，召回率，阈值用于可视化
 precision, recall, thresholds = precision_recall_curve(test_y, score_y)
 plot_precision_recall(precision, recall)
+
+# 线性SVM分类
+print('####线性SVM分类####')
+model = LinearSVC()
+model.fit(train_x, train_y)
+predict_y = model.predict(test_x)
+# 预测样本的置信分数
+score_y = model.decision_function(test_x)
+# 计算混淆矩阵，并显示
+cm = confusion_matrix(test_y, predict_y)
+class_names = [0, 1]
+# 显示混淆矩阵
+plot_confusion_matrix(cm, classes=class_names, title='线性SVM 混淆矩阵')
+# 显示模型评估分数
+show_metrics(cm)
+# 计算精确率，召回率，阈值用于可视化
+precision, recall, thresholds = precision_recall_curve(test_y, score_y)
+plot_precision_recall(precision, recall, '线性SVM')
