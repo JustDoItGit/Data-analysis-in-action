@@ -66,6 +66,7 @@ data = pd.read_csv('./creditcard.csv')
 print(data.describe())
 # 设置plt正确显示中文
 plt.rcParams['font.sans-serif'] = ['SimHei']
+plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 # 绘制类别分布
 plt.figure()
 ax = sns.countplot(x='Class', data=data)
@@ -90,9 +91,9 @@ plt.show()
 # 对Amount进行数据规范化
 data['Amount_Norm'] = StandardScaler().fit_transform(data['Amount'].values.reshape(-1, 1))
 # 特征选择
-y = data['Class'].values
+y = data['Class']
 data = data.drop(['Time', 'Amount', 'Class'], axis=1)
-X = data.values
+X = data
 # 准备训练集和测试集
 train_x, test_x, train_y, test_y = train_test_split(X, y, test_size=0.1, random_state=33)
 # 逻辑回归分类
@@ -111,6 +112,16 @@ show_metrics(cm)
 # 计算精确率，召回率，阈值用于可视化
 precision, recall, thresholds = precision_recall_curve(test_y, score_y)
 plot_precision_recall(precision, recall)
+
+# 显示特征向量的重要程度
+coeffs = clf.coef_
+df_co = pd.DataFrame(coeffs.T, columns=["importance_"])
+# 下标设置为Feature Name
+df_co.index = X.columns
+df_co.sort_values("importance_", ascending=True, inplace=True)
+df_co.importance_.plot(kind="barh")
+plt.title("Feature Importance")
+plt.show()
 
 # 线性SVM分类
 print('####线性SVM分类####')
