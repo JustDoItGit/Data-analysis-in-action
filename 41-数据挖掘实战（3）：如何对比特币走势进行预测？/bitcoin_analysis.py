@@ -69,6 +69,7 @@ df_month2 = pd.concat([df_month2, future])
 df_month2['forecast'] = best_model.predict(start=0, end=91)
 # 比特币预测结果显示
 plt.figure(figsize=(20, 7))
+df_month2.Weighted_Price.plot(label='实际金额')
 df_month2.forecast.plot(color='r', ls='--', label='预测金额')
 plt.legend()
 plt.title('比特币金额（月）')
