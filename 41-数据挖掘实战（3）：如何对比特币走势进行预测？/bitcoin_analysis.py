@@ -20,7 +20,7 @@ df_month = df.resample('M').mean()
 df_Q = df.resample('Q-DEC').mean()
 df_year = df.resample('A-DEC').mean()
 # 按照天，月，季度，年来显示比特币的走势
-fig = plt.figure(figsize=[15, 7])
+fig = plt.figure(figsize=(15, 7))
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
 plt.suptitle('比特币金额（美金）', fontsize=20)
 plt.subplot(221)
@@ -43,7 +43,7 @@ parameters = product(ps, qs)
 parameters_list = list(parameters)
 # 寻找最优ARMA模型参数，即best_aic最小
 results = []
-best_aic = float("inf")  # 正无穷
+best_aic = float('inf')  # 正无穷
 for param in parameters_list:
     try:
         model = ARMA(df_month.Weighted_Price, order=(param[0], param[1])).fit()
@@ -60,20 +60,3 @@ for param in parameters_list:
 result_table = pd.DataFrame(results)
 result_table.columns = ['parameters', 'aic']
 print('最优模型: ', best_model.summary())
-# 比特币预测
-df_month2 = df_month[['Weighted_Price']]
-date_list = [datetime(2018, 11, 30), datetime(2018, 12, 31), datetime(2019, 1, 31), datetime(2019, 2, 28),
-             datetime(2019, 3, 31),
-             datetime(2019, 4, 30), datetime(2019, 5, 31), datetime(2019, 6, 30)]
-future = pd.DataFrame(index=date_list, columns=df_month.columns)
-df_month2 = pd.concat([df_month2, future])
-df_month2['forecast'] = best_model.predict(start=0, end=91)
-# 比特币预测结果显示
-plt.figure(figsize=(20, 7))
-df_month2.Weighted_Price.plot(label='实际金额')
-df_month2.forecast.plot(color='r', ls='--', label='预测金额')
-plt.legend()
-plt.title('比特币金额（月）')
-plt.xlabel('时间')
-plt.ylabel('美金')
-plt.show()
