@@ -60,3 +60,18 @@ for param in parameters_list:
 result_table = pd.DataFrame(results)
 result_table.columns = ['parameters', 'aic']
 print('最优模型: ', best_model.summary())
+# 比特币预测
+df_month2 = df_month[['Weighted_Price']]
+date_list = [datetime(2018, 11, 30), datetime(2018, 12, 31), datetime(2019, 1, 31), datetime(2019, 2, 28),
+             datetime(2019, 3, 31), datetime(2019, 4, 30), datetime(2019, 5, 31), datetime(2019, 6, 30)]
+future = pd.DataFrame(index=date_list, columns=df_month.columns)
+df_month2 = pd.concat([df_month2, future])
+df_month2['forecast'] = best_model.predict(start=0, end=91)
+# 比特币预测结果显示
+plt.figure(figsize=(20, 7))
+df_month2.forecast.plot(color='r', ls='--', label='预测金额')
+plt.legend()
+plt.title('比特币金额（月）')
+plt.xlabel('时间')
+plt.ylabel('美金')
+plt.show()
