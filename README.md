@@ -3,3 +3,6 @@
 
 # 代码环境
 MacOS
+
+# 统计分析
+![学习统计分析](./learning_analysis.jpeg)
